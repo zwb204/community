@@ -5,6 +5,7 @@ import life.zwb.community.dto.GithubUser;
 import life.zwb.community.mapper.UserMapper;
 import life.zwb.community.model.User;
 import life.zwb.community.provider.GithubProvider;
+import life.zwb.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -37,6 +38,8 @@ public class AuthorizeController {
 
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code")String code,
@@ -58,10 +61,8 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUser.getName());
             user.setAccountId(String.valueOf(githubUser.getId()));
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(githubUser.getAvatar_url());
-            userMapper.insert(user);  //用数据库实物的存储代替session
+            userService.createOrUpdate(user);
             httpServletResponse.addCookie(new Cookie("token",token));
 //            // 登录成功，写cookie和session
 //            httpServletRequest.getSession().setAttribute("user",githubUser);
@@ -71,6 +72,15 @@ public class AuthorizeController {
             // 登录失败，重新登陆
             return "redirect:/";
         }
-//        return "index";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest httpServletRequest,
+                         HttpServletResponse httpServletResponse){
+        httpServletRequest.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token", null);
+        cookie.setMaxAge(0);
+        httpServletResponse.addCookie(cookie);
+        return "redirect:/";
     }
 }
