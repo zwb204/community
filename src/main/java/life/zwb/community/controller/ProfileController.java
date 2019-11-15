@@ -1,4 +1,4 @@
-package life.zwb.community.Controller;
+package life.zwb.community.controller;
 
 import life.zwb.community.dto.PaginationDTO;
 import life.zwb.community.model.User;

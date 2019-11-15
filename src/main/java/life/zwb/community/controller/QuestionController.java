@@ -1,7 +1,6 @@
-package life.zwb.community.Controller;
+package life.zwb.community.controller;
 
 import life.zwb.community.dto.QuestionDTO;
-import life.zwb.community.mapper.QuestionMapper;
 import life.zwb.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
