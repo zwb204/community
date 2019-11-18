@@ -4,6 +4,7 @@ import life.zwb.community.dto.PaginationDTO;
 import life.zwb.community.dto.QuestionDTO;
 import life.zwb.community.exception.CustomizeErrorCode;
 import life.zwb.community.exception.CustomizeException;
+import life.zwb.community.mapper.QuestionExtMapper;
 import life.zwb.community.mapper.QuestionMapper;
 import life.zwb.community.mapper.UserMapper;
 import life.zwb.community.model.Question;
@@ -29,6 +30,8 @@ public class QuestionService {
     private QuestionMapper questionMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
 
@@ -131,5 +134,12 @@ public class QuestionService {
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
         }
+    }
+
+    public void incView(Integer id) {
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 }
